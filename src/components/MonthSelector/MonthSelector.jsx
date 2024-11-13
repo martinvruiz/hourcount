@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import supabase from "../../supabase/supabaseClient";
 
 export const MonthSelector = () => {
@@ -6,6 +6,7 @@ export const MonthSelector = () => {
     const [months, setMonths] = useState([]); 
     const [records, setRecords] = useState([]);
     const [totalHours, setTotalHours] = useState({ hours: 0, minutes: 0 })
+    const [loading, setLoading] = useState(false)
 
     const getAvailableMonths = async () => {
         try {
@@ -30,19 +31,29 @@ export const MonthSelector = () => {
 };
 
 
-    const getRecordsByMonth =async (selectedMonth) => {
-        console.log("Mes seleccionado para búsqueda:", selectedMonth); 
-        const { data, error } = await supabase
-            .rpc('filter_by_month', { month: selectedMonth });
+    const getRecordsByMonth = useCallback(async (selectedMonth) => {
+        if (!selectedMonth) {
+            setRecords([]);
+            setTotalHours({hours:0, minutes:0})
+            return;
+        }
 
-    if (error) {
-        console.error('Error fetching records:', error);
-    } else {
-        setRecords(data); 
-        console.log("Fetched records:", data); 
-        calculateTotalHours(data);
-    }
-};
+        setLoading(true)
+        console.log("Mes seleccionado para búsqueda:", selectedMonth);
+
+        const { data, error } = await supabase
+            .rpc('filter_by_month', { selected_month: selectedMonth });
+
+        setLoading(false)
+        
+        if (error) {
+            console.error('Error fetching records:', error);
+        } else {
+            setRecords(data);
+            console.log("Fetched records:", data);
+            calculateTotalHours(data);
+        }
+    }, []);
 
     const calculateTotalHours = (records) => {
         let totalMinutes = 0;
@@ -77,6 +88,12 @@ export const MonthSelector = () => {
         console.log("Valor seleccionado en el dropdown:", selected);
         setMonth(selected);
 
+        if (!selected) {
+            setRecords([]);
+            setTotalHours({ hours: 0, minutes: 0 });
+            return;
+        }
+
 
         const [monthName, , year] = selected.split(" ");
     
@@ -98,7 +115,7 @@ export const MonthSelector = () => {
         if (month) {
             getRecordsByMonth(month);
         }
-    }, []);
+    }, [getRecordsByMonth, month]);
 
     return (
         <div className="flex w-screen flex-col items justify-center items-center">
@@ -118,7 +135,9 @@ export const MonthSelector = () => {
                 ))}
             </select>
 
-            {records.length > 0 ? (
+            {loading ? (
+                <p className="lg:text-xl py-4">Cargando...</p>
+            ) : records.length > 0 ? (
                 <div className="py-4 w-3/4 flex flex-col items-center justify-center">
                     <h3 className="lg:text-xl py-2">Registros del mes {month}:</h3>
                     <ul>
@@ -135,5 +154,5 @@ export const MonthSelector = () => {
                     <p className="lg:text-xl py-4">No hay registros para este mes</p>
                 )}
         </div>
-    );
-};
+            )
+        }
