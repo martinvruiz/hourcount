@@ -11,7 +11,7 @@ export const SignUp = () => {
       e.preventDefault();
       setError(null);
       try {
-        const { data, error } = await supabase.auth.signUp({
+        const {  error } = await supabase.auth.signUp({
           email,
           password,
         });
@@ -19,7 +19,7 @@ export const SignUp = () => {
         if (error) {
           setError("Error al registrar el usuario: " + error.message);
         } else {
-          setSuccess("Usuario registrado con éxito, revisa tu correo para confirmar la cuenta.");
+          setSuccess("Usuario registrado con éxito, revisa tu correo para confirmar la cuenta. (Puede tardar hasta 6 horas)");
         }
       } catch (err) {
         setError("Error en el registro: " + err.message);
