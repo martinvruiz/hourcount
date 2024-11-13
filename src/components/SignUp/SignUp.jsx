@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import supabase from '../../supabase/supabaseClient'; // Asegúrate de que la importación sea correcta
+import supabase from '../../supabase/supabaseClient';
 
 export const SignUp = () => {
     const [email, setEmail] = useState('');
@@ -17,19 +17,14 @@ export const SignUp = () => {
         });
   
         if (error) {
-          console.log(error)
-          if (error.code === 'email_exists') {
-            setError("Este correo electrónico ya está registrado.");
-          } else {
-            setError("Error al registrar el usuario: " + error.message);
-          }
+          setError("Error al registrar el usuario: " + error.message);
         } else {
           setSuccess("Usuario registrado con éxito, revisa tu correo para confirmar la cuenta.");
         }
       } catch (err) {
         setError("Error en el registro: " + err.message);
       }
-    }  
+    };
   
     return (
       <form onSubmit={handleRegister} className="flex flex-col justify-center items-center m-4 p-4 w-full border-2 rounded-xl border-white">

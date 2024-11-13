@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import supabase from './supabase/supabaseClient';
 import { Login } from './components/Login/Login';
 import { SignUp } from './components/SignUp/SignUp';
+import { HourQt } from './pages/HourQt';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -47,6 +48,7 @@ function App() {
           <Navbar  handleLogout={handleLogout}/>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/hourqt" element={<HourQt />} />
           </Routes>
         </BrowserRouter>
       )}
