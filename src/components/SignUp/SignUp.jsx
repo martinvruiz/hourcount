@@ -17,14 +17,19 @@ export const SignUp = () => {
         });
   
         if (error) {
-          setError("Error al registrar el usuario: " + error.message);
+          console.log(error)
+          if (error.code === 'email_exists') {
+            setError("Este correo electrónico ya está registrado.");
+          } else {
+            setError("Error al registrar el usuario: " + error.message);
+          }
         } else {
           setSuccess("Usuario registrado con éxito, revisa tu correo para confirmar la cuenta.");
         }
       } catch (err) {
         setError("Error en el registro: " + err.message);
       }
-    };
+    }  
   
     return (
       <form onSubmit={handleRegister} className="flex flex-col justify-center items-center m-4 p-4 w-full border-2 rounded-xl border-white">
