@@ -45,8 +45,8 @@ export const SignUp = () => {
           className='w-3/4 m-1 p-1'
         />
         <button className='w-3/4 p-2 m-2 bg-black text-white border border-white' type="submit">Registrarse</button>
-        {error && <p>{error}</p>}
-        {success && <p>{success}</p>}
+        {error && <p className='text-center p-1'>{error}</p>}
+        {success && <p className='text-center p-1'>{success}</p>}
       </form>
     );
   };

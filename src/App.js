@@ -34,7 +34,7 @@ function App() {
 
 
   return (
-    <div className="font-ubuntu flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-teal-700 to-orange-400">
+    <div className="font-ubuntu flex flex-col items-center min-h-screen bg-gradient-to-r from-teal-700 to-orange-400">
       {!user ? (
         <div className='lg:w-2/5 flex flex-col items-center'>
           <h2 className='text-xl lg:text-3xl'>Iniciar sesión</h2>
