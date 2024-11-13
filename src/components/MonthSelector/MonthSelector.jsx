@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import supabase from "../../supabase/supabaseClient";
 
 export const MonthSelector = () => {
@@ -30,7 +30,7 @@ export const MonthSelector = () => {
 };
 
 
-    const getRecordsByMonth = useCallback(async (selectedMonth) => {
+    const getRecordsByMonth =async (selectedMonth) => {
         console.log("Mes seleccionado para búsqueda:", selectedMonth); 
         const { data, error } = await supabase
             .rpc('filter_by_month', { month: selectedMonth });
@@ -42,7 +42,7 @@ export const MonthSelector = () => {
         console.log("Fetched records:", data); 
         calculateTotalHours(data);
     }
-},[]);
+};
 
     const calculateTotalHours = (records) => {
         let totalMinutes = 0;
@@ -98,7 +98,7 @@ export const MonthSelector = () => {
         if (month) {
             getRecordsByMonth(month);
         }
-    }, [month, getRecordsByMonth]);
+    }, []);
 
     return (
         <div className="flex w-screen flex-col items justify-center items-center">
