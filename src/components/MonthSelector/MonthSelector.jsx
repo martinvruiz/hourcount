@@ -6,7 +6,6 @@ export const MonthSelector = () => {
     const [months, setMonths] = useState([]); 
     const [records, setRecords] = useState([]);
     const [totalHours, setTotalHours] = useState({ hours: 0, minutes: 0 })
-    const [loading, setLoading] = useState(false)
 
     const getAvailableMonths = async () => {
         try {
@@ -38,13 +37,11 @@ export const MonthSelector = () => {
             return;
         }
 
-        setLoading(true)
         console.log("Mes seleccionado para búsqueda:", selectedMonth);
 
         const { data, error } = await supabase
             .rpc('filter_by_month', { selected_month: selectedMonth });
 
-        setLoading(false)
         
         if (error) {
             console.error('Error fetching records:', error);
@@ -112,10 +109,14 @@ export const MonthSelector = () => {
     }, []);
 
     useEffect(() => {
+    const loadData = async () => {
+        await getAvailableMonths();
         if (month) {
-            getRecordsByMonth(month);
+            await getRecordsByMonth(month);
         }
-    }, [getRecordsByMonth, month]);
+    };
+    loadData();
+}, []);
 
     return (
         <div className="flex w-screen flex-col items justify-center items-center">
@@ -135,9 +136,7 @@ export const MonthSelector = () => {
                 ))}
             </select>
 
-            {loading ? (
-                <p className="lg:text-xl py-4">Cargando...</p>
-            ) : records.length > 0 ? (
+                {records.length > 0 ? (
                 <div className="py-4 w-3/4 flex flex-col items-center justify-center">
                     <h3 className="lg:text-xl py-2">Registros del mes {month}:</h3>
                     <ul>
