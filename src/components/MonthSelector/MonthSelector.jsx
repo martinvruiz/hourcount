@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import supabase from "../../supabase/supabaseClient";
+import { ToastContainer,toast } from "react-toastify";
 
 export const MonthSelector = () => {
     const [month, setMonth] = useState(null);
@@ -54,6 +55,12 @@ export const MonthSelector = () => {
     }, []);
 
     const calculateTotalHours = (records) => {
+        if (!Array.isArray(records)) {
+            console.warn("records no es un arreglo válido");
+            return;
+        }
+
+
         let totalMinutes = 0;
 
         records.forEach(record => {
@@ -80,6 +87,64 @@ export const MonthSelector = () => {
 };
 
 
+const askDelete = (id) => {
+    toast.warning(
+        <div className='text-black'>
+            <span>¿Desea eliminar el registro?</span>
+            <div>
+                <button
+                onClick={() => {
+                handleDelete(id);
+                toast.dismiss();
+                }}
+                className=' bg-black text-white rounded-md my-2 mx-6 px-2'
+                >
+                    Sí
+                </button>
+                <button
+                onClick={() => toast.dismiss()}
+                className=' bg-black text-white rounded-md my-2 mx-6 px-2'
+                >
+                    No
+                </button>
+            </div>
+        </div>,
+        {
+            autoClose: false,
+            closeButton: false,
+        }
+    );
+};
+
+
+const handleDelete = async (id) => {
+
+    try {
+        console.log("Eliminando registro con ID:", id);
+
+        const { error } = await supabase
+            .from('workhours')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error("Error al eliminar el registro:", error);
+            return;
+        }
+
+        console.log("Registro eliminado con éxito");
+
+        
+        const updatedRecords = records.filter((record) => record.id !== id);
+        setRecords(updatedRecords);
+
+        calculateTotalHours(updatedRecords);
+
+
+    } catch (error) {
+        console.error("Error al eliminar el registro:", error);
+    }
+};
 
 const handleMonth = (e) => {
     const selected = e.target.value;
@@ -130,7 +195,7 @@ const handleMonth = (e) => {
 }, []);
 
     return (
-        <div className="flex w-screen flex-col items justify-center items-center">
+        <div className="flex overflow-hidden w-screen flex-col items justify-center items-center">
             <label htmlFor="month-select" className="py-2 lg:text-xl">Selecciona un mes:</label>
             <select
                 id="month-select"
@@ -147,18 +212,20 @@ const handleMonth = (e) => {
                 ))}
             </select>
 
-                {records.length > 0 ? (
-                <div className="py-4 w-3/4 flex flex-col items-center justify-center">
+                {Array.isArray(records) && records.length > 0 ? (
+                <div className="py-4 overflow-hidden flex flex-col items-center justify-center">
+                    <h4 className="lg:text-xl font-semibold py-2">Total: {totalHours.hours} horas {totalHours.minutes} minutos</h4>
                     <h3 className="lg:text-xl py-2">Registros del mes {month}:</h3>
                     <ul>
-                        {records.map(({date, hours}, index) => (
-                        <div className="grid grid-cols-2 items-center justify-center w-full" key={index}>
-                            <div>{date}</div>
-                            <div>{hours}</div>
+                        {records.map(({id,date, hours}, index) => (
+                        <div className="grid border border-white px-4 py-2 grid-cols-3 items-center justify-center w-full max-w-full" key={index}>
+                            <div className="">{date}</div>
+                            <div className="">{hours}</div>
+                            <button className="border rounded-md mx-1 bg-red-500" onClick={()=>askDelete(id)}>Eliminar</button>
                         </div>
                         ))}
+                        <ToastContainer position="top-center" className="text-center"/>
                     </ul>
-                    <h4 className="lg:text-xl">Total: {totalHours.hours} horas {totalHours.minutes} minutos</h4>
                 </div>
                 ) : (
                     <p className="lg:text-xl py-4">No hay registros para este mes</p>
