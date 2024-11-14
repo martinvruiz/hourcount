@@ -47,7 +47,6 @@ export const MonthSelector = () => {
         if (error) {
             console.error('Error fetching records:', error);
         } else {
-            console.log("Datos obtenidos en móvil:", data);
             setRecords(data);
             console.log("Fetched records:", data);
             calculateTotalHours(data);
@@ -159,10 +158,8 @@ const handleMonth = (e) => {
     }
 
     const cleanedValue = selected.replace(" de", "");
-    console.log("Valor limpio:", cleanedValue);
 
     const [monthName, year] = cleanedValue.split(" ");
-    console.log("Mes y Año extraídos:", monthName, year);
 
     if (monthName && year) {
         const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth(); //
