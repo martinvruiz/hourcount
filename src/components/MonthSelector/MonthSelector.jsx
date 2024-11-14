@@ -46,6 +46,7 @@ export const MonthSelector = () => {
         if (error) {
             console.error('Error fetching records:', error);
         } else {
+            console.log("Datos obtenidos en móvil:", data);
             setRecords(data);
             console.log("Fetched records:", data);
             calculateTotalHours(data);
@@ -80,29 +81,39 @@ export const MonthSelector = () => {
 
 
 
-    const handleMonth = (e) => {
-        const selected = e.target.value;
-        console.log("Valor seleccionado en el dropdown:", selected);
-        setMonth(selected);
+const handleMonth = (e) => {
+    const selected = e.target.value;
+    console.log("Valor seleccionado en el dropdown:", selected);
 
-        if (!selected) {
-            setRecords([]);
-            setTotalHours({ hours: 0, minutes: 0 });
+    setRecords([]); 
+    setTotalHours({ hours: 0, minutes: 0 });
+
+    if (!selected) {
+        console.error("No se seleccionó un mes.");
+        return;
+    }
+
+    const cleanedValue = selected.replace(" de", "");
+    console.log("Valor limpio:", cleanedValue);
+
+    const [monthName, year] = cleanedValue.split(" ");
+    console.log("Mes y Año extraídos:", monthName, year);
+
+    if (monthName && year) {
+        const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth(); //
+        if (monthIndex === -1) {
+            console.error("Mes no válido:", monthName);
             return;
         }
 
+        const formattedMonth = `${year}-${(monthIndex + 1).toString().padStart(2, "0")}`;
+        console.log("Mes formateado para la búsqueda:", formattedMonth);
 
-        const [monthName, , year] = selected.split(" ");
-    
-        if (monthName && year) {
-            const monthIndex = new Date(`${monthName} 1, ${year}`).getMonth() + 1;
-            const formattedMonth = `${year}-${monthIndex.toString().padStart(2, "0")}`;
-            console.log("Mes formateado para la búsqueda:", formattedMonth);
-            getRecordsByMonth(formattedMonth);
-        } else {
-            console.error("Formato de mes inválido:", selected);
-        }
-    };
+        getRecordsByMonth(formattedMonth);
+    } else {
+        console.error("Formato de mes inválido:", selected);
+    }
+};
 
     useEffect(() => {
         getAvailableMonths();

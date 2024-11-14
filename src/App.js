@@ -28,7 +28,7 @@ function App() {
     if (error) {
       console.error("Error al cerrar sesión:", error);
     } else {
-      setUser(null); // Limpia el estado de usuario después de cerrar sesión
+      setUser(null);
     }
   };
 
@@ -36,7 +36,7 @@ function App() {
   return (
     <div className="font-ubuntu flex flex-col items-center min-h-screen bg-gradient-to-r from-teal-700 to-orange-400">
       {!user ? (
-        <div className='lg:w-2/5 flex flex-col items-center'>
+        <div className='lg:w-2/5 pt-8 flex flex-col items-center'>
           <h2 className='text-xl lg:text-3xl'>Iniciar sesión</h2>
           <Login setUser={setUser} />
 

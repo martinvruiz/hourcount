@@ -20,7 +20,7 @@ export const Login = () => {
 };
 
     return (
-        <div className='flex flex-col justify-center items-center m-4 p-4 w-full border-2 rounded-xl border-white'>
+        <div className='flex flex-col justify-center items-center p-8 w-full border-2 rounded-xl border-white'>
             <input 
             type="email" 
             value={email} 
