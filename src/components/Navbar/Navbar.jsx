@@ -9,9 +9,9 @@ export const Navbar = ({handleLogout})=>{
             <Link className="p-4" to="/">Hour Count</Link>
             <Link className="p-4" to="/hourqt">Cant. de horas</Link>
             <button onClick={handleLogout} className=" bg-black p-2 m-2 rounded text-white">
-        Cerrar Sesión
-      </button>
-      <ToastContainer position="top-center"/>
+                Cerrar Sesión
+            </button>
+            <ToastContainer position="top-center"/>
         </nav>
     </>
 }

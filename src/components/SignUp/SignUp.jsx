@@ -4,6 +4,7 @@ import supabase from '../../supabase/supabaseClient';
 export const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [userName, setUserName] = useState('')
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
   
@@ -14,6 +15,9 @@ export const SignUp = () => {
         const {  error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: { display_name: userName },
+          },
         });
   
         if (error) {
@@ -37,8 +41,16 @@ export const SignUp = () => {
           className='w-3/4 m-1 p-1'
         />
         <input
+          type="name"
+          placeholder="Nombre de usuario"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+          required
+          className='w-3/4 m-1 p-1'
+        />
+        <input
           type="password"
-          placeholder="Password"
+          placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
